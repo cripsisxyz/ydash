@@ -13,7 +13,8 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-html, body, [class*="css"], * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+html, body, [class*="css"] { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+p, span, div, h1, h2, h3, h4, h5, label, button, input, textarea, select { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
 
 /* ── Metric cards ── */
 [data-testid="metric-container"] {
@@ -129,17 +130,21 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 1.5rem 0 !importan
 }
 
 /* ── Block container ── */
-.main .block-container { padding-top: 2rem !important; }
+.main .block-container { padding-top: 3rem !important; max-width: 1200px !important; }
+
+/* ── Prevent stMarkdown p-tag collisions ── */
+[data-testid="stMarkdownContainer"] > p { margin: 0 !important; padding: 0 !important; line-height: 1 !important; }
 </style>
 """, unsafe_allow_html=True)
 
 def _label(text, mt="2.2rem"):
     """Render a Material-style section label."""
     st.markdown(
-        f'<div style="margin:{mt} 0 0.9rem;display:flex;align-items:center;gap:9px;">'
+        f'<div style="display:block;clear:both;width:100%;margin:{mt} 0 0.9rem;line-height:1;">'
+        f'<div style="display:flex;align-items:center;gap:9px;">'
         f'<div style="width:3px;height:15px;background:linear-gradient(180deg,#00c853,#00897b);border-radius:2px;flex-shrink:0;"></div>'
-        f'<span style="font-size:0.67rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.38);">{text}</span>'
-        f'</div>',
+        f'<span style="font-size:0.67rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.38);white-space:nowrap;">{text}</span>'
+        f'</div></div>',
         unsafe_allow_html=True
     )
 
@@ -896,7 +901,7 @@ else:
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px;">
         <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
             <div style="font-size:1.3rem;margin-bottom:12px;">📈</div>
             <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">P&amp;L Breakdown</div>
@@ -906,11 +911,6 @@ else:
             <div style="font-size:1.3rem;margin-bottom:12px;">🕐</div>
             <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Portfolio Timeline</div>
             <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Value evolution over time per asset. Filter by date range to analyze any window of your history.</div>
-        </div>
-        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
-            <div style="font-size:1.3rem;margin-bottom:12px;">⚡</div>
-            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Live Prices</div>
-            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Current prices pulled from Yahoo Finance. Works for ETFs, stocks, and crypto automatically.</div>
         </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;">
