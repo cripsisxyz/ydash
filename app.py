@@ -885,26 +885,53 @@ if uploaded_file is not None:
 
 else:
     st.markdown("""
-    <div style="margin:3rem auto;max-width:520px;text-align:center;">
-        <div style="background:linear-gradient(135deg,#00c853 0%,#00897b 100%);width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 24px;box-shadow:0 8px 24px rgba(0,200,83,0.3);">📊</div>
-        <div style="font-size:1.55rem;font-weight:700;color:#fff;letter-spacing:-0.03em;margin-bottom:8px;">Upload your CSV to get started</div>
-        <div style="font-size:0.9rem;color:rgba(255,255,255,0.4);margin-bottom:36px;">Export from the Yuh app under <strong style="color:rgba(255,255,255,0.6);">Transactions → Export CSV</strong></div>
+    <div style="padding:3.5rem 0 2rem;text-align:center;">
+        <div style="background:linear-gradient(135deg,#00c853 0%,#00897b 100%);width:72px;height:72px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 28px;box-shadow:0 12px 32px rgba(0,200,83,0.28);">📊</div>
+        <div style="font-size:2rem;font-weight:700;color:#fff;letter-spacing:-0.04em;line-height:1.15;margin-bottom:12px;">Portfolio analytics for<br>your Yuh transactions</div>
+        <div style="font-size:0.92rem;color:rgba(255,255,255,0.42);max-width:420px;margin:0 auto 14px;line-height:1.6;">
+            Upload your Yuh CSV export and instantly see your P&amp;L, fees, asset allocation, and performance — broken down per asset with live price data.
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.25);border-radius:8px;padding:6px 14px;font-size:0.78rem;color:#00c853;font-weight:500;margin-bottom:52px;">
+            Yuh app &rarr; Transactions &rarr; Export CSV
+        </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:700px;margin:0 auto;">
-        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 18px;">
-            <div style="font-size:1.4rem;margin-bottom:10px;">📈</div>
-            <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:4px;">P&L Breakdown</div>
-            <div style="font-size:0.72rem;color:rgba(255,255,255,0.38);">Realized vs unrealized gains per asset, with and without fees</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;">
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
+            <div style="font-size:1.3rem;margin-bottom:12px;">📈</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">P&amp;L Breakdown</div>
+            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Realized vs unrealized gains per asset, gross and net of fees. Color-coded trading console view.</div>
         </div>
-        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 18px;">
-            <div style="font-size:1.4rem;margin-bottom:10px;">🕐</div>
-            <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:4px;">Timeline</div>
-            <div style="font-size:0.72rem;color:rgba(255,255,255,0.38);">Portfolio evolution over time with per-asset filtering</div>
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
+            <div style="font-size:1.3rem;margin-bottom:12px;">🕐</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Portfolio Timeline</div>
+            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Value evolution over time per asset. Filter by date range to analyze any window of your history.</div>
         </div>
-        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 18px;">
-            <div style="font-size:1.4rem;margin-bottom:10px;">⚡</div>
-            <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:4px;">Live Prices</div>
-            <div style="font-size:0.72rem;color:rgba(255,255,255,0.38);">Fallback to Yahoo Finance for current market prices</div>
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
+            <div style="font-size:1.3rem;margin-bottom:12px;">⚡</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Live Prices</div>
+            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Current prices pulled from Yahoo Finance. Works for ETFs, stocks, and crypto automatically.</div>
         </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;">
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
+            <div style="font-size:1.3rem;margin-bottom:12px;">🍩</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Asset Allocation</div>
+            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Donut chart of current holdings by value. See where your capital is concentrated at a glance.</div>
+        </div>
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
+            <div style="font-size:1.3rem;margin-bottom:12px;">🧾</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Fee Tracking</div>
+            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Total fees paid per asset and activity type. Know exactly how much Yuh is taking from your returns.</div>
+        </div>
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 20px;">
+            <div style="font-size:1.3rem;margin-bottom:12px;">📋</div>
+            <div style="font-size:0.82rem;font-weight:600;color:#fff;margin-bottom:6px;">Transaction History</div>
+            <div style="font-size:0.74rem;color:rgba(255,255,255,0.38);line-height:1.55;">Full log of every buy and sell per asset, with quantity, price, and date. Supports both standard and crypto CSV formats.</div>
+        </div>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;text-align:center;">
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.22);">Supports standard Yuh CSV &amp; crypto transactions format &nbsp;·&nbsp; No data is stored or sent anywhere</div>
     </div>
     """, unsafe_allow_html=True)
