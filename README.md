@@ -2,6 +2,8 @@
 
 Portfolio analytics dashboard for [Yuh](https://www.yuh.com) — the Swiss investment app. Upload your transaction CSV and get a full breakdown of your P&L, fees, asset allocation, and performance history.
 
+**Live app → [yuhdash.streamlit.app](https://yuhdash.streamlit.app/)**
+
 ---
 
 ## Features
