@@ -556,7 +556,7 @@ if uploaded_file is not None:
                 "Unrealized P&L",
                 f"{total_unrealized:.2f} CHF",
                 delta=f"{(total_unrealized/total_cost*100):+.2f}%" if total_cost > 0 else None,
-                delta_color="normal" if total_unrealized >= 0 else "inverse",
+                delta_color="normal",
                 help="Open positions, excluding fees"
             )
 
@@ -565,7 +565,7 @@ if uploaded_file is not None:
                 "Gross P&L",
                 f"{total_profit_loss:.2f} CHF",
                 delta=f"{total_profit_loss_pct:+.2f}%",
-                delta_color="normal" if total_profit_loss >= 0 else "inverse",
+                delta_color="normal",
                 help="Before deducting fees"
             )
 
@@ -574,7 +574,7 @@ if uploaded_file is not None:
                 "NET P&L",
                 f"{net_profit_loss:.2f} CHF",
                 delta=f"{roi_pct:+.2f}%",
-                delta_color="normal" if net_profit_loss >= 0 else "inverse",
+                delta_color="normal",
                 help=f"After deducting {total_fees:.2f} CHF in fees"
             )
 
@@ -592,7 +592,7 @@ if uploaded_file is not None:
                 "Realized P&L",
                 f"{total_realized:.2f} CHF",
                 delta=f"{(total_realized/total_invested*100):+.2f}%" if total_invested > 0 and total_realized != 0 else None,
-                delta_color="normal" if total_realized >= 0 else "inverse"
+                delta_color="normal"
             )
 
         with col4:
@@ -663,7 +663,7 @@ if uploaded_file is not None:
                         "Current Value",
                         f"{row['Current Value']:.2f} CHF",
                         delta=f"{gain_pct:+.2f}%",
-                        delta_color="normal" if gain_pct >= 0 else "inverse"
+                        delta_color="normal"
                     )
                 with col2:
                     realized_pct = (row['Realized PnL'] / row['Total Cost'] * 100) if row['Total Cost'] > 0 else 0
@@ -671,7 +671,7 @@ if uploaded_file is not None:
                         "Realized P&L",
                         f"{row['Realized PnL']:.2f} CHF",
                         delta=f"{realized_pct:+.2f}%",
-                        delta_color="normal" if row['Realized PnL'] >= 0 else "inverse"
+                        delta_color="normal"
                     )
                 with col3:
                     unrealized_pct = (row['Unrealized PnL'] / row['Total Cost'] * 100) if row['Total Cost'] > 0 else 0
@@ -679,14 +679,14 @@ if uploaded_file is not None:
                         "Unrealized P&L",
                         f"{row['Unrealized PnL']:.2f} CHF",
                         delta=f"{unrealized_pct:+.2f}%",
-                        delta_color="normal" if row['Unrealized PnL'] >= 0 else "inverse"
+                        delta_color="normal"
                     )
                 with col4:
                     st.metric(
                         "Total P&L",
                         f"{row['Total PnL']:.2f} CHF",
                         delta=f"{row['PnL %']:+.2f}%",
-                        delta_color="normal" if row['Total PnL'] >= 0 else "inverse"
+                        delta_color="normal"
                     )
 
                 # Description section
@@ -892,7 +892,7 @@ else:
             Upload your Yuh CSV export and instantly see your P&amp;L, fees, asset allocation, and performance — broken down per asset with live price data.
         </div>
         <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.25);border-radius:8px;padding:6px 14px;font-size:0.78rem;color:#00c853;font-weight:500;margin-bottom:52px;">
-            Yuh app &rarr; Transactions &rarr; Export CSV
+            Yuh app &rarr; Account &rarr; Documents &rarr; Request Document &rarr; Account activities export
         </div>
     </div>
 
