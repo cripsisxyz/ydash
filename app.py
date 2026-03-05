@@ -7,7 +7,7 @@ from typing import Dict, Tuple
 import re
 from price_api import get_current_price as api_get_price, get_ticker_info as api_get_info, get_historical_data
 
-st.set_page_config(page_title="Yuh Portfolio Analyzer Pro", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Yuhdash", page_icon=":material/finance_mode:", layout="wide")
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
 def get_ticker_info(ticker: str) -> Dict:
@@ -145,8 +145,8 @@ def calculate_portfolio_timeline(investments_df: pd.DataFrame, start_date: datet
     return pd.DataFrame(timeline_data)
 
 # Title and description
-st.title("📊 Yuh Portfolio Analyzer Pro")
-st.markdown("Analyze your investment portfolio with historical CSV data and advanced analysis")
+st.title("Yuhdash")
+st.markdown("Portfolio analytics for your Yuh transactions")
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your Yuh CSV file", type=['csv'])
@@ -168,26 +168,22 @@ if uploaded_file is not None:
     # Clean column names
     df.columns = df.columns.str.strip()
 
-    st.success(f"✅ File loaded: {len(df)} transactions found")
-
-    # Debug
-    with st.expander("🔍 Detected columns (Debug)"):
-        st.write(df.columns.tolist())
+    st.success(f"File loaded: {len(df)} transactions found")
 
     # Detect format
     csv_format = detect_csv_format(df)
 
     if csv_format == 'crypto':
-        st.info("🔍 Format detected: Crypto Transactions")
+        st.info("Format detected: Crypto Transactions")
         df = normalize_crypto_format(df)
     elif csv_format == 'standard':
-        st.info("🔍 Format detected: Standard Yuh format")
+        st.info("Format detected: Standard Yuh format")
     else:
-        st.error("❌ CSV format not recognized.")
+        st.error("CSV format not recognized.")
         st.stop()
 
     # Show raw data
-    with st.expander("📋 View raw data"):
+    with st.expander(":material/table: Raw Data"):
         st.dataframe(df)
 
     # Add DATE column if not present
@@ -231,7 +227,7 @@ if uploaded_file is not None:
             investments_df['ASSET_DESCRIPTION'] = ''
 
         # Time Range Selector
-        st.header("📅 Time Range Selector")
+        st.header(":material/date_range: Time Range")
         col1, col2 = st.columns(2)
 
         min_date = investments_df['DATE'].min().date()
@@ -334,24 +330,7 @@ if uploaded_file is not None:
                     current_prices[asset] = abs(portfolio[asset]['total_cost'] / portfolio[asset]['quantity']) if portfolio[asset]['quantity'] > 0 else 0
 
         # Calculate metrics
-        st.header("💰 General Summary")
-
-        # Debug info
-        with st.expander("🔍 Debug - Portfolio Calculation"):
-            debug_data = []
-            for asset, data in portfolio.items():
-                if data['quantity'] > 0.0001:
-                    debug_data.append({
-                        'Asset': asset,
-                        'Description': asset_descriptions.get(asset, ''),
-                        'Quantity': data['quantity'],
-                        'Total Cost': data['total_cost'],
-                        'Price in current_prices': current_prices.get(asset, 0),
-                        'Value (qty * price)': data['quantity'] * current_prices.get(asset, 0)
-                    })
-            st.dataframe(pd.DataFrame(debug_data))
-            st.write(f"**Total costs sum:** {sum([abs(p['total_cost']) for p in portfolio.values() if p['quantity'] > 0.0001]):.2f} CHF")
-            st.write(f"**Total current values sum:** {sum([p['quantity'] * current_prices.get(asset, 0) for asset, p in portfolio.items() if p['quantity'] > 0.0001]):.2f} CHF")
+        st.header(":material/account_balance_wallet: Summary")
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -372,7 +351,7 @@ if uploaded_file is not None:
                      delta="Closed" if total_realized != 0 else None)
 
         # Portfolio Analysis
-        st.header("📊 Detailed Portfolio Analysis")
+        st.header(":material/analytics: Portfolio Analysis")
 
         portfolio_data = []
         total_current_value = 0
@@ -400,22 +379,11 @@ if uploaded_file is not None:
                 if not asset_desc:
                     asset_desc = info['name']
 
-                # Determine asset type icon
+                # Determine asset type
                 asset_type = info.get('asset_type', 'N/A')
-                type_icon = {
-                    'ETF': '📊',
-                    'Stock': '📈',
-                    'Crypto': '₿',
-                    'Mutual Fund': '📊',
-                    'Index': '📉',
-                    'Future': '📈',
-                    'Option': '📈',
-                    'Currency': '💱',
-                    'N/A': '💼'
-                }.get(asset_type, '💼')
 
                 portfolio_data.append({
-                    'Type': f"{type_icon} {asset_type}",
+                    'Type': asset_type,
                     'Asset': asset,
                     'Name': asset_desc,
                     'Quantity': data['quantity'],
@@ -476,7 +444,7 @@ if uploaded_file is not None:
             )
 
         # Portfolio breakdown table
-        st.subheader("📋 Detailed Breakdown by Asset")
+        st.subheader(":material/table_view: Breakdown by Asset")
 
         # Format for display
         portfolio_display = portfolio_df.copy()
@@ -486,9 +454,9 @@ if uploaded_file is not None:
         portfolio_display['Total Cost'] = portfolio_display['Total Cost'].apply(lambda x: f"{x:.2f} CHF")
         portfolio_display['Current Value'] = portfolio_display['Current Value'].apply(lambda x: f"{x:.2f} CHF")
         portfolio_display['Fees Paid'] = portfolio_display['Fees Paid'].apply(lambda x: f"{x:.2f} CHF")
-        portfolio_display['Realized PnL'] = portfolio_display['Realized PnL'].apply(lambda x: f"{'🟢' if x >= 0 else '🔴'} {x:.2f} CHF")
-        portfolio_display['Unrealized PnL'] = portfolio_display['Unrealized PnL'].apply(lambda x: f"{'🟢' if x >= 0 else '🔴'} {x:.2f} CHF")
-        portfolio_display['Total PnL'] = portfolio_display['Total PnL'].apply(lambda x: f"{'🟢' if x >= 0 else '🔴'} {x:.2f} CHF")
+        portfolio_display['Realized PnL'] = portfolio_display['Realized PnL'].apply(lambda x: f"{'+' if x >= 0 else ''}{x:.2f} CHF")
+        portfolio_display['Unrealized PnL'] = portfolio_display['Unrealized PnL'].apply(lambda x: f"{'+' if x >= 0 else ''}{x:.2f} CHF")
+        portfolio_display['Total PnL'] = portfolio_display['Total PnL'].apply(lambda x: f"{'+' if x >= 0 else ''}{x:.2f} CHF")
         portfolio_display['PnL %'] = portfolio_display['PnL %'].apply(lambda x: f"{x:.2f}%")
 
         st.dataframe(portfolio_display[['Type', 'Asset', 'Name', 'Quantity', 'Avg Price', 'Current Price',
@@ -496,10 +464,10 @@ if uploaded_file is not None:
                     use_container_width=True)
 
         # Clarification note
-        st.info("💡 **Note:** The PnL shown does NOT include fees. The NET PnL in the general summary does deduct paid fees.")
+        st.info("The P&L shown does not include fees. The NET P&L in the summary deducts all fees paid.")
 
         # Asset Details Expander
-        st.subheader("📖 Detailed Asset Information")
+        st.subheader(":material/info: Asset Details")
         for _, row in portfolio_df.iterrows():
             with st.expander(f"{row['Type']} {row['Asset']} - {row['Name']}"):
                 # First row - Key metrics
@@ -538,12 +506,17 @@ if uploaded_file is not None:
 
                 # Description section
                 st.markdown("---")
-                st.markdown(f"**📝 Description:** {row['Description']}")
+                st.markdown(f"**Description:** {row['Description']}")
 
         # Visualizations
-        st.header("📈 Visualizations")
+        st.header(":material/bar_chart: Charts")
 
-        tab1, tab2, tab3, tab4 = st.tabs(["Composition", "Performance", "Timeline", "Transactions"])
+        tab1, tab2, tab3, tab4 = st.tabs([
+            ":material/donut_large: Composition",
+            ":material/trending_up: Performance",
+            ":material/timeline: Timeline",
+            ":material/receipt_long: Transactions"
+        ])
 
         with tab1:
             # Portfolio composition pie chart
@@ -593,7 +566,7 @@ if uploaded_file is not None:
 
         with tab3:
             # Timeline chart - Evolution by asset
-            st.subheader("📈 Portfolio Evolution")
+            st.subheader("Portfolio Evolution")
 
             selected_assets = st.multiselect(
                 "Select assets to view their evolution",
@@ -654,7 +627,7 @@ if uploaded_file is not None:
 
         with tab4:
             # Transaction history
-            st.subheader("📜 Transaction History")
+            st.subheader("Transaction History")
             selected_asset = st.selectbox("Select an asset", list(asset_transactions.keys()))
 
             if selected_asset:
@@ -664,7 +637,7 @@ if uploaded_file is not None:
                 st.dataframe(transactions_df, use_container_width=True)
 
         # Additional stats
-        st.header("📊 Additional Statistics")
+        st.header(":material/query_stats: Statistics")
 
         col1, col2 = st.columns(2)
 
@@ -699,26 +672,24 @@ if uploaded_file is not None:
                     st.info("No fees recorded in this period")
 
     else:
-        st.warning("⚠️ No investment transactions found in the file")
+        st.warning("No investment transactions found in the file.")
 
 else:
-    st.info("👆 Please upload your Yuh CSV file to start the analysis")
+    st.info("Upload your Yuh CSV file to start the analysis.")
 
     st.markdown("""
-    ### 📝 Instructions:
+    ### Instructions
 
-    1. **Download your CSV** transactions from Yuh
+    1. **Download your CSV** from the Yuh app
     2. **Upload the file** using the button above
     3. **Select the date range** you want to analyze
-    4. View your **complete performance** with advanced analysis
 
-    ### 🚀 Pro Features:
+    ### Features
 
-    - 💹 **Historical prices** from your CSV (last known price)
-    - 📈 **Portfolio evolution timeline**
-    - 💰 **Realized vs Unrealized PnL** (closed vs open positions)
-    - 📊 **Detailed analysis by asset** with descriptions
-    - 📅 **Customizable date range selector**
-    - 🎯 **Net ROI** after fees
-    - 📖 **Complete information** for each ETF/stock
+    - **Historical prices** from your CSV data
+    - **Portfolio evolution timeline**
+    - **Realized vs Unrealized P&L** — closed vs open positions
+    - **Detailed analysis by asset** with descriptions
+    - **Customizable date range**
+    - **Net ROI** after fees
     """)
