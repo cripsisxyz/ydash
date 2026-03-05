@@ -72,11 +72,6 @@ p, span, div, h1, h2, h3, h4, h5, label, button, input, textarea, select { font-
     border-radius: 12px !important;
     background: rgba(255,255,255,0.02) !important;
     margin-bottom: 8px !important;
-    overflow: hidden !important;
-}
-[data-testid="stExpander"] summary {
-    font-weight: 500 !important;
-    font-size: 0.9rem !important;
 }
 
 /* ── Sidebar ── */
@@ -133,7 +128,7 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 1.5rem 0 !importan
 .main .block-container { padding-top: 3rem !important; max-width: 1200px !important; }
 
 /* ── Prevent stMarkdown p-tag collisions ── */
-[data-testid="stMarkdownContainer"] > p { margin: 0 !important; padding: 0 !important; line-height: 1 !important; }
+[data-testid="stMarkdownContainer"] > p:empty { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
