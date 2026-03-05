@@ -14,7 +14,7 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 html, body, [class*="css"] { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
-p, span, div, h1, h2, h3, h4, h5, label, button, input, textarea, select { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+p, div, h1, h2, h3, h4, h5, label, input, textarea, select { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
 
 /* ── Metric cards ── */
 [data-testid="metric-container"] {
