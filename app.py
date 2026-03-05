@@ -11,18 +11,137 @@ st.set_page_config(page_title="Yuhdash", page_icon=":material/finance_mode:", la
 
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"], * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+
+/* ── Metric cards ── */
 [data-testid="metric-container"] {
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    padding: 14px 16px;
-    background-color: rgba(255,255,255,0.025);
+    background: #1a1d2e;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 20px 22px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4), 0 0 0 0 transparent;
+    transition: box-shadow .15s ease;
+}
+[data-testid="metric-container"]:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+[data-testid="stMetricLabel"] p {
+    color: rgba(255,255,255,0.42) !important;
+    font-size: 0.68rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+}
+[data-testid="stMetricValue"] {
+    color: #fff !important;
+    font-size: 1.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em !important;
 }
 [data-testid="stMetricDelta"] {
-    font-size: 0.82rem !important;
-    font-weight: 700 !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
 }
+
+/* ── Tabs ── */
+[data-baseweb="tab-list"] {
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    border-radius: 10px !important;
+    padding: 4px !important;
+    gap: 2px !important;
+}
+[data-baseweb="tab"] {
+    border-radius: 7px !important;
+    color: rgba(255,255,255,0.45) !important;
+    font-weight: 500 !important;
+    font-size: 0.84rem !important;
+}
+[aria-selected="true"][data-baseweb="tab"] {
+    background: rgba(255,255,255,0.09) !important;
+    color: #fff !important;
+}
+[data-baseweb="tab-highlight"], [data-baseweb="tab-border"] { display: none !important; }
+
+/* ── Expanders ── */
+[data-testid="stExpander"] {
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.02) !important;
+    margin-bottom: 8px !important;
+    overflow: hidden !important;
+}
+[data-testid="stExpander"] summary {
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+}
+
+/* ── Sidebar ── */
+section[data-testid="stSidebar"] {
+    background: #12151f !important;
+    border-right: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* ── File uploader ── */
+[data-testid="stFileUploaderDropzone"] {
+    border: 2px dashed rgba(255,255,255,0.12) !important;
+    border-radius: 12px !important;
+    transition: all .2s ease;
+}
+[data-testid="stFileUploaderDropzone"]:hover {
+    border-color: rgba(0,200,83,0.45) !important;
+    background: rgba(0,200,83,0.04) !important;
+}
+
+/* ── Dataframe ── */
+[data-testid="stDataFrame"] > div {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    overflow: hidden !important;
+}
+
+/* ── Alerts ── */
+[data-testid="stAlert"] {
+    border-radius: 10px !important;
+    font-size: 0.84rem !important;
+}
+
+/* ── Divider ── */
+hr { border-color: rgba(255,255,255,0.06) !important; margin: 1.5rem 0 !important; }
+
+/* ── Inputs ── */
+[data-testid="stDateInput"] input,
+[data-baseweb="select"] > div:first-child,
+[data-baseweb="input"] input {
+    border-radius: 8px !important;
+    border-color: rgba(255,255,255,0.12) !important;
+    background: rgba(255,255,255,0.04) !important;
+    font-size: 0.84rem !important;
+}
+
+/* ── Multiselect tags ── */
+[data-baseweb="tag"] {
+    background: rgba(0,200,83,0.15) !important;
+    border-color: rgba(0,200,83,0.3) !important;
+    border-radius: 6px !important;
+}
+
+/* ── Block container ── */
+.main .block-container { padding-top: 2rem !important; }
 </style>
 """, unsafe_allow_html=True)
+
+def _label(text, mt="2.2rem"):
+    """Render a Material-style section label."""
+    st.markdown(
+        f'<div style="margin:{mt} 0 0.9rem;display:flex;align-items:center;gap:9px;">'
+        f'<div style="width:3px;height:15px;background:linear-gradient(180deg,#00c853,#00897b);border-radius:2px;flex-shrink:0;"></div>'
+        f'<span style="font-size:0.67rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.38);">{text}</span>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
 def get_ticker_info(ticker: str) -> Dict:
@@ -159,12 +278,33 @@ def calculate_portfolio_timeline(investments_df: pd.DataFrame, start_date: datet
 
     return pd.DataFrame(timeline_data)
 
-# Title and description
-st.title("Yuhdash")
-st.markdown("Portfolio analytics for your Yuh transactions")
+# Sidebar — always visible branding
+with st.sidebar:
+    st.markdown("""
+    <div style="padding:4px 0 20px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div style="background:linear-gradient(135deg,#00c853,#00897b);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;box-shadow:0 4px 10px rgba(0,200,83,0.3);">📊</div>
+            <span style="font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:-0.02em;">Yuhdash</span>
+        </div>
+        <p style="margin:6px 0 0 38px;font-size:0.7rem;color:rgba(255,255,255,0.28);line-height:1;">Portfolio Analytics</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# App header
+st.markdown("""
+<div style="display:flex;align-items:center;gap:14px;padding:0 0 6px;">
+    <div style="background:linear-gradient(135deg,#00c853 0%,#00897b 100%);width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 6px 16px rgba(0,200,83,0.3);">📊</div>
+    <div>
+        <div style="font-size:1.65rem;font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;">Yuhdash</div>
+        <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:2px;">Portfolio analytics · Yuh</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("<div style='margin-bottom:1.5rem'></div>", unsafe_allow_html=True)
 
 # File uploader
-uploaded_file = st.file_uploader("Upload your Yuh CSV file", type=['csv'])
+uploaded_file = st.file_uploader("Upload your Yuh CSV export", type=['csv'])
 
 if uploaded_file is not None:
     # Try to read CSV with different separators
@@ -241,17 +381,14 @@ if uploaded_file is not None:
         else:
             investments_df['ASSET_DESCRIPTION'] = ''
 
-        # Time Range Selector
-        st.header(":material/date_range: Time Range")
-        col1, col2 = st.columns(2)
-
         min_date = investments_df['DATE'].min().date()
         max_date = investments_df['DATE'].max().date()
 
-        with col1:
-            start_date = st.date_input("Start date", value=min_date, min_value=min_date, max_value=max_date)
-        with col2:
-            end_date = st.date_input("End date", value=max_date, min_value=min_date, max_value=max_date)
+        with st.sidebar:
+            st.markdown('<p style="font-size:0.65rem;font-weight:600;letter-spacing:0.11em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:0 0 10px;">Date Range</p>', unsafe_allow_html=True)
+            start_date = st.date_input("From", value=min_date, min_value=min_date, max_value=max_date)
+            end_date = st.date_input("To", value=max_date, min_value=min_date, max_value=max_date)
+            st.markdown('<p style="font-size:0.7rem;color:rgba(255,255,255,0.25);margin-top:6px;">Filtering transactions in the selected window.</p>', unsafe_allow_html=True)
 
         # Filter by date range
         mask = (investments_df['DATE'].dt.date >= start_date) & (investments_df['DATE'].dt.date <= end_date)
@@ -408,7 +545,7 @@ if uploaded_file is not None:
         roi_pct = (net_profit_loss / total_cost * 100) if total_cost > 0 else 0
 
         # Primary performance KPIs
-        st.header(":material/analytics: Portfolio Overview")
+        _label("Portfolio Overview", mt="0.5rem")
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
@@ -464,7 +601,7 @@ if uploaded_file is not None:
         st.divider()
 
         # Portfolio breakdown table
-        st.subheader(":material/table_view: Breakdown by Asset")
+        _label("Breakdown by Asset")
 
         # Format for display
         portfolio_display = portfolio_df.copy()
@@ -504,7 +641,7 @@ if uploaded_file is not None:
         st.info("The P&L shown does not include fees. The NET P&L in the summary deducts all fees paid.")
 
         # Asset Details Expander
-        st.subheader(":material/info: Asset Details")
+        _label("Asset Details")
         for _, row in portfolio_df.iterrows():
             with st.expander(f"{row['Type']} {row['Asset']} - {row['Name']}"):
                 # First row - Key metrics
@@ -557,7 +694,7 @@ if uploaded_file is not None:
                 st.markdown(f"**Description:** {row['Description']}")
 
         # Visualizations
-        st.header(":material/bar_chart: Charts")
+        _label("Charts")
 
         tab1, tab2, tab3, tab4 = st.tabs([
             ":material/donut_large: Composition",
@@ -627,7 +764,6 @@ if uploaded_file is not None:
 
         with tab3:
             # Timeline chart - Evolution by asset
-            st.subheader("Portfolio Evolution")
 
             selected_assets = st.multiselect(
                 "Select assets to view their evolution",
@@ -691,7 +827,6 @@ if uploaded_file is not None:
 
         with tab4:
             # Transaction history
-            st.subheader("Transaction History")
             selected_asset = st.selectbox("Select an asset", list(asset_transactions.keys()))
 
             if selected_asset:
@@ -701,7 +836,7 @@ if uploaded_file is not None:
                 st.dataframe(transactions_df, use_container_width=True)
 
         # Additional stats
-        st.header(":material/query_stats: Statistics")
+        _label("Statistics")
 
         col1, col2 = st.columns(2)
 
@@ -715,7 +850,12 @@ if uploaded_file is not None:
                     title='Activity Type Distribution',
                     labels={'x': 'Activity Type', 'y': 'Count'}
                 )
-                fig_activities.update_layout(xaxis_tickangle=-45)
+                fig_activities.update_layout(
+                    xaxis_tickangle=-45,
+                    template='plotly_dark',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)'
+                )
                 st.plotly_chart(fig_activities, use_container_width=True)
 
         with col2:
@@ -730,7 +870,12 @@ if uploaded_file is not None:
                         title='Fees by Activity Type',
                         labels={'x': 'Activity Type', 'y': 'Fees (CHF)'}
                     )
-                    fig_fees.update_layout(xaxis_tickangle=-45)
+                    fig_fees.update_layout(
+                        xaxis_tickangle=-45,
+                        template='plotly_dark',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(0,0,0,0)'
+                    )
                     st.plotly_chart(fig_fees, use_container_width=True)
                 else:
                     st.info("No fees recorded in this period")
@@ -739,21 +884,27 @@ if uploaded_file is not None:
         st.warning("No investment transactions found in the file.")
 
 else:
-    st.info("Upload your Yuh CSV file to start the analysis.")
-
     st.markdown("""
-    ### Instructions
-
-    1. **Download your CSV** from the Yuh app
-    2. **Upload the file** using the button above
-    3. **Select the date range** you want to analyze
-
-    ### Features
-
-    - **Historical prices** from your CSV data
-    - **Portfolio evolution timeline**
-    - **Realized vs Unrealized P&L** — closed vs open positions
-    - **Detailed analysis by asset** with descriptions
-    - **Customizable date range**
-    - **Net ROI** after fees
-    """)
+    <div style="margin:3rem auto;max-width:520px;text-align:center;">
+        <div style="background:linear-gradient(135deg,#00c853 0%,#00897b 100%);width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 24px;box-shadow:0 8px 24px rgba(0,200,83,0.3);">📊</div>
+        <div style="font-size:1.55rem;font-weight:700;color:#fff;letter-spacing:-0.03em;margin-bottom:8px;">Upload your CSV to get started</div>
+        <div style="font-size:0.9rem;color:rgba(255,255,255,0.4);margin-bottom:36px;">Export from the Yuh app under <strong style="color:rgba(255,255,255,0.6);">Transactions → Export CSV</strong></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:700px;margin:0 auto;">
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 18px;">
+            <div style="font-size:1.4rem;margin-bottom:10px;">📈</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:4px;">P&L Breakdown</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.38);">Realized vs unrealized gains per asset, with and without fees</div>
+        </div>
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 18px;">
+            <div style="font-size:1.4rem;margin-bottom:10px;">🕐</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:4px;">Timeline</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.38);">Portfolio evolution over time with per-asset filtering</div>
+        </div>
+        <div style="background:#1a1d2e;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 18px;">
+            <div style="font-size:1.4rem;margin-bottom:10px;">⚡</div>
+            <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:4px;">Live Prices</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.38);">Fallback to Yahoo Finance for current market prices</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
